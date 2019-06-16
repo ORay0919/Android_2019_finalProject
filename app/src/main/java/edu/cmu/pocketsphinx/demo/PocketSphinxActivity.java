@@ -75,6 +75,13 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
     /* Keyword we are looking for to activate menu */
     private static final String KEYPHRASE = "hello mighty computer"; //hello mighty computer
     private static final String KEYPHRASE2 = "阿飽 阿飽";
+//    zero/1e-5/
+//    one/1.0/
+//    two/1.0/
+//    three/1e-5/
+//    four/1e-5/
+//    five/1e-8/
+//    six/1e-5/
 
     /* Used to handle permission request */
     private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
@@ -301,7 +308,7 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
 
         recognizer = SpeechRecognizerSetup.defaultSetup()
                 .setAcousticModel(new File(assetsDir, "en-us-ptm")) //en-us-ptm // zh_cn.cd_cont_5000
-                .setDictionary(new File(assetsDir, "en-small.dic")) //tai_mix.ci_cont //cmudict-en-us.dict //zh3000
+                .setDictionary(new File(assetsDir, "cmudict-en-us.dict")) //tai_mix.ci_cont //cmudict-en-us.dict //zh3000
 //                .setRawLogDir(assetsDir) // 調用可紀錄錄音的結果
                 .getRecognizer();
         recognizer.addListener(this);
@@ -313,7 +320,7 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
         // Create keyword-activation search.
 //        recognizer.addKeyphraseSearch(KWS_SEARCH, KEYPHRASE);
 
-        File menuGrammar = new File(assetsDir, "en-keyphrase.list");
+        File menuGrammar = new File(assetsDir, "digits.list");
         recognizer.addKeywordSearch(KWS_SEARCH, menuGrammar);
 
 
