@@ -26,9 +26,13 @@ public class Connect4Model {
     private String mPlayer1Name;
     private String mPlayer2Name;
 
+    public int[] ballRecord = new int[BOARD_WIDTH*BOARD_HEIGHT+10];
+    public int turn;
+
     private Point mLastPlacedBall = null;
 
     private boolean mPlayerTurn;
+    public boolean mFirstBall;
 
     /**
      * Simple Point class for convenience
@@ -69,9 +73,11 @@ public class Connect4Model {
         }
 
         mPlayerTurn = PLAYER_1;
+        mFirstBall = true;
         mPlayer1Name = DEFAULT_PLAYER_1_NAME;
         mPlayer2Name = DEFAULT_PLAYER_2_NAME;
 
+        turn = 0;
     }
 
     public Point getLastPlacedBall() {
@@ -139,6 +145,15 @@ public class Connect4Model {
             }
         }
         return -1; //Error
+    }
+
+    /**
+     * Removes the ball in the top of the column
+     * @param col column numb r, goes from 0 - BOARD_WIDTH-1
+     */
+    public void removeBall(int col)//first column is 0
+    {
+
     }
 
     /**
@@ -348,6 +363,9 @@ public class Connect4Model {
         else {
             mPlayerTurn = PLAYER_2;
         }
+
+        mFirstBall = true;
+        turn = 0;
 
         mLastPlacedBall = null;
 

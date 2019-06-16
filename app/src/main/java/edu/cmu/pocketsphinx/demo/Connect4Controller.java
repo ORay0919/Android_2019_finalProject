@@ -52,15 +52,24 @@ public class Connect4Controller {
             if (row == -1) {
                 return;
             }
+            else{
 
-            mModel.checkForWinner();
+                mModel.ballRecord[mModel.turn] = column;
+                mModel.turn++;
 
-            if (!mModel.hasWinner()) {
-                new BotAsyncTask().execute(mModel.getBoard());
-                nextPlayerTurn();
-            }
-            else {
-                nextPlayerTurn();
+                mModel.checkForWinner();
+
+                if (!mModel.hasWinner()) {
+                    new BotAsyncTask().execute(mModel.getBoard());
+                    nextPlayerTurn();
+                } else {
+                    nextPlayerTurn();
+                }
+
+                if(mModel.mFirstBall)
+                {
+                    mModel.mFirstBall = false;
+                }
             }
         }
         else  {
@@ -76,14 +85,12 @@ public class Connect4Controller {
      */
     public void userClickedPlayAgain() {
 
-
-
         mModel.reset();
         //Must start the bot if its his turn next game
         if (mModel.getPlayerTurn() != mPlayerNumber) {
             new BotAsyncTask().execute(mModel.getBoard());
+            mModel.mFirstBall = false;
         }
-
 
         mView.invalidate();
     }
@@ -122,10 +129,13 @@ public class Connect4Controller {
 
             mModel.addBall(move, Connect4Model.Color.YELLOW);
 
+            //record
+            mModel.ballRecord[mModel.turn] = move *10;
+            mModel.turn++;
+
             nextPlayerTurn();
             mModel.checkForWinner();
             mView.invalidate();
-
         }
     }
 

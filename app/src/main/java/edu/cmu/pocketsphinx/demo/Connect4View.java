@@ -348,7 +348,20 @@ public class Connect4View extends View {
             //click undo button
             else if (mUndoRect.contains((int)x, (int)y)) {
 
-                Log.d("test","undo");
+                if(mModel.mFirstBall)
+                {
+                    Log.d("Damn","First");
+                }
+                else
+                {
+                    Log.d("Damn","NonFirst");
+                }
+
+                Log.d("Damn", "turn : "+mModel.turn);
+                for(int i=0 ;i<mModel.turn ;i++)
+                {
+                    Log.d("Damn", mModel.ballRecord[i]+"");
+                }
             }
 
             //click play again button
