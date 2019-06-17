@@ -1,6 +1,13 @@
-About
-=====
+Android final project team24
 
-This is a demonstration for Pocketsphinx on Android
+Used in the project
+    Tool:CMU PocketSphinx, SphinxTrain, SphinxBase
+    Library:CMU PocketSphinx
 
-See for details http://cmusphinx.sourceforge.net/wiki/tutorialandroid
+Demo video link :
+    https://drive.google.com/open?id=1_SvhNmw4oKQLURamlVYJq2q4Dou7IDbk
+
+Team member and contribution:
+    P76074088 語音及遊戲功能整合
+    P78084047 語音模型訓練、建立及實測調整
+    P76074711 Connect4功能實作
