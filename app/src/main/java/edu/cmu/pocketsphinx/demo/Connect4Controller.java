@@ -29,9 +29,7 @@ public class Connect4Controller {
         mBot = new Connect4Bot();
         mModel.setPlayer1Name(PLAYER_1_NAME_AGAINST_BOT);
         mModel.setPlayer2Name(Connect4Bot.NAME);
-
     }
-
 
     /**
      * This function is called whenever the view has detected a touch event on the screen.
@@ -50,17 +48,21 @@ public class Connect4Controller {
 
             //Column is full
             if (row == -1) {
+                enableButton();
                 return;
             }
+            else{
+                mModel.recordBall(column);
 
-            mModel.checkForWinner();
+                mModel.checkForWinner();
 
-            if (!mModel.hasWinner()) {
-                new BotAsyncTask().execute(mModel.getBoard());
-                nextPlayerTurn();
-            }
-            else {
-                nextPlayerTurn();
+                if (!mModel.hasWinner()) {
+                    new BotAsyncTask().execute(mModel.getBoard());
+                    nextPlayerTurn();
+                }
+                else {
+                    nextPlayerTurn();
+                }
             }
         }
         else  {
@@ -76,23 +78,40 @@ public class Connect4Controller {
      */
     public void userClickedPlayAgain() {
 
-
-
         mModel.reset();
+
         //Must start the bot if its his turn next game
         if (mModel.getPlayerTurn() != mPlayerNumber) {
-            new BotAsyncTask().execute(mModel.getBoard());
+//            new BotAsyncTask().execute(mModel.getBoard());
+            new BotAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mModel.getBoard());
         }
-
 
         mView.invalidate();
     }
 
     /**
-     * Ends the game. Communicates this to opponent if playing online
+     * This is called when the user clicks the Undo button
+     * Recover the last one User's play
      */
-    public void endGame() {
+    public void userClickedUndo() {
 
+        mModel.removerLastMove();
+        enableButton();
+        mView.invalidate();
+    }
+
+    /**
+     * Disable the button to avoid bug like double clicked
+     */
+    public void disableButton() {
+        mModel.disableButton();
+    }
+
+    /**
+     * Enable the button
+     */
+    public void enableButton() {
+        mModel.enableButton();
     }
 
     /**
@@ -114,6 +133,7 @@ public class Connect4Controller {
         @Override
         protected Integer doInBackground(Connect4Model.Color[][] ... params) {
 
+            disableButton();
             return mBot.getNextMove(params[0]);
         }
 
@@ -122,10 +142,13 @@ public class Connect4Controller {
 
             mModel.addBall(move, Connect4Model.Color.YELLOW);
 
+            //record
+            mModel.recordBall(move);
+
             nextPlayerTurn();
+            enableButton();
             mModel.checkForWinner();
             mView.invalidate();
-
         }
     }
 

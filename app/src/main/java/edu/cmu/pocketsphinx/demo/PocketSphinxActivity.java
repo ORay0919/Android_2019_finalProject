@@ -39,11 +39,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.TextView;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -73,8 +72,16 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
     private static final String KWS_SEARCH = "wakeup";
 
     /* Keyword we are looking for to activate menu */
-    private static final String KEYPHRASE = "hello mighty computer"; //hello mighty computer
-    private static final String KEYPHRASE2 = "阿飽 阿飽";
+//    private static final String KEYPHRASE = "eight"; //hello mighty computer
+//    private static final String KEYPHRASE2 = "阿飽 阿飽";
+
+    private static final String KEYPHRASE = "zero";
+    private static final String KEYPHRASE_1 = "one";
+    private static final String KEYPHRASE_2 = "two";
+    private static final String KEYPHRASE_3 = "three";
+    private static final String KEYPHRASE_4 = "four";
+    private static final String KEYPHRASE_5 = "five";
+    private static final String KEYPHRASE_6 = "six";
 //    zero/1e-5/
 //    one/1.0/
 //    two/1.0/
@@ -143,7 +150,6 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
         super.onCreate(savedInstanceState);
         // Prepare the data for UI
         setContentView(R.layout.main);
-//        ((TextView) findViewById(R.id.caption_text)).setText("Preparing the recognizer");
 
         // ASUSr Zenbo Setting
         setZenbo();
@@ -163,7 +169,8 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
 
         // Recognizer initialization is a time-consuming and it involves IO,
         // so we execute it in async task
-        new SetupTask(this).execute();
+//        new SetupTask(this).execute();
+        new SetupTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     // 異步執行
@@ -228,34 +235,80 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
      * for final result in onResult.
      */
     @Override
-    public void onPartialResult(Hypothesis hypothesis) {
+    public void onPartialResult(Hypothesis hypothesis)
+    {
         if (hypothesis == null)
             return;
 
         String text = hypothesis.getHypstr();
+        int column_select;
         Log.d("Spoken onPartialResult", text);
-        if ((text.length() == KEYPHRASE.length()) || (text.length() == KEYPHRASE2.length())) {
-            if (text.equals(KEYPHRASE) || text.equals(KEYPHRASE2)) { //KEYPHRASE
+        if ((text.length() <= KEYPHRASE_3.length()))
+        {
+            switch(text)
+            {
+                case KEYPHRASE:
+                    column_select = 0;
+                    mView.onVoiceEvent(column_select);
+                    break;
+                case KEYPHRASE_1:
+                    column_select = 1;
+                    mView.onVoiceEvent(column_select);
+                    break;
+                case KEYPHRASE_2:
+                    column_select = 2;
+                    mView.onVoiceEvent(column_select);
+                    break;
+                case KEYPHRASE_3:
+                    column_select = 3;
+                    mView.onVoiceEvent(column_select);
+                    break;
+                case KEYPHRASE_4:
+                    column_select = 4;
+                    mView.onVoiceEvent(column_select);
+                    break;
+                case KEYPHRASE_5:
+                    column_select = 5;
+                    mView.onVoiceEvent(column_select);
+                    break;
+                case KEYPHRASE_6:
+                    column_select = 6;
+                    mView.onVoiceEvent(column_select);
+                    break;
+            }
+
+//            if (text.equals(KEYPHRASE) || text.equals(KEYPHRASE2)) { //KEYPHRASE
 
                 //
                 // Here
                 //
                 //            switchSearch(MENU_SEARCH); //ori
 
-                Random ran = new Random();
-                int fxck = ran.nextInt(6+1);
-                Log.d("Spoken", "text.equals(KEYPHRASE)"+ Integer.toString(fxck));
-                mView.onVoiceEvent(fxck);
+//                recognizer.stop();
+//
+//                Random ran = new Random();
+//                int fxck = ran.nextInt(6+1);
+//                Log.d("Spoken", "text.equals(KEYPHRASE)"+ Integer.toString(fxck));
+//                mView.onVoiceEvent(fxck);
 
-                Intent callapp = getPackageManager().getLaunchIntentForPackage("com.example.abaohelp");
-                if (callapp != null) {
-                    startActivity(callapp);
-                }
-                else {
-                    Log.d("Spoken", "App not found");
+//                Intent callapp = getPackageManager().getLaunchIntentForPackage("com.example.abaohelp");
+//                if (callapp != null) {
+//                    startActivity(callapp);
+//                }
+//                else {
+//                    Log.d("Spoken", "App not found");
+//                }
+
+            // 語音輸入衝突點
+                try
+                {
+                    Thread.sleep(100);
+                    recognizer.stop();
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
                 }
 
-                recognizer.stop();
                 recognizer.startListening(KWS_SEARCH);
             }
 //            else {
@@ -263,8 +316,9 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
 //                ((TextView) findViewById(R.id.result_text)).setText(text);
 //            }
 
-        }
-        else {
+
+        else
+            {
             Log.d("Spoken","text.length not match keyphrase.");
         }
 
@@ -326,7 +380,7 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
 
         // Create grammar-based search for selection between demos
 //        File menuGrammar = new File(assetsDir, "en-keyphrase.list");
-//        recognizer.addGrammarSearch('keyphrase'', menuGrammar);
+//        recognizer.addGrammarSearch(KWS_SEARCH, menuGrammar);
 
         // Create grammar-based search for digit recognition
         //File digitsGrammar = new File(assetsDir, "digits.gram");
@@ -363,13 +417,13 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
         super.onResume();
         if(robotListenCallback!= null)
             robotAPI.robot.registerListenCallback(robotListenCallback);
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
-                View.SYSTEM_UI_FLAG_FULLSCREEN |
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        );
+//        View decorView = getWindow().getDecorView();
+//        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+//                View.SYSTEM_UI_FLAG_FULLSCREEN |
+//                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
+//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+//                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//        );
     }
 
     private void setZenbo() {
