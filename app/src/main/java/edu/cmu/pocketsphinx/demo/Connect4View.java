@@ -266,7 +266,7 @@ public class Connect4View extends View {
      */
     private void drawLineNumbers(Canvas canvas) {
         for (int i = 0; i < 7; i++) {
-            canvas.drawText(Integer.toString(i+1),
+            canvas.drawText(Integer.toString(i),
                     (int) mBoardRect.left + (mGridWidth * ( i + 0.5f))
                     , (int) (mBoardRect.bottom - ( mGridHeight * Connect4Model.BOARD_HEIGHT)-TEXT_PADDING),
                     mLineNumberPaint);
