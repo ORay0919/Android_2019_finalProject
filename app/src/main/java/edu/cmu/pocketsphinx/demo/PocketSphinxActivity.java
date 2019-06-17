@@ -32,7 +32,6 @@ package edu.cmu.pocketsphinx.demo;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -43,12 +42,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.Random;
-
 
 import edu.cmu.pocketsphinx.Assets;
 import edu.cmu.pocketsphinx.Hypothesis;
@@ -73,7 +69,6 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
 
     /* Keyword we are looking for to activate menu */
 //    private static final String KEYPHRASE = "eight"; //hello mighty computer
-//    private static final String KEYPHRASE2 = "阿飽 阿飽";
 
     private static final String KEYPHRASE = "zero";
     private static final String KEYPHRASE_1 = "one";
@@ -277,28 +272,6 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
                     break;
             }
 
-//            if (text.equals(KEYPHRASE) || text.equals(KEYPHRASE2)) { //KEYPHRASE
-
-            //
-            // Here
-            //
-            //            switchSearch(MENU_SEARCH); //ori
-
-//                recognizer.stop();
-//
-//                Random ran = new Random();
-//                int fxck = ran.nextInt(6+1);
-//                Log.d("Spoken", "text.equals(KEYPHRASE)"+ Integer.toString(fxck));
-//                mView.onVoiceEvent(fxck);
-
-//                Intent callapp = getPackageManager().getLaunchIntentForPackage("com.example.abaohelp");
-//                if (callapp != null) {
-//                    startActivity(callapp);
-//                }
-//                else {
-//                    Log.d("Spoken", "App not found");
-//                }
-
             // 語音輸入衝突點
             try
             {
@@ -311,12 +284,6 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
 
             recognizer.startListening(KWS_SEARCH);
         }
-//            else {
-//                // show錯誤辨識結果
-//                ((TextView) findViewById(R.id.result_text)).setText(text);
-//            }
-
-
         else
         {
             Log.d("Spoken","text.length not match keyphrase.");
@@ -417,13 +384,13 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
         super.onResume();
         if(robotListenCallback!= null)
             robotAPI.robot.registerListenCallback(robotListenCallback);
-//        View decorView = getWindow().getDecorView();
-//        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
-//                View.SYSTEM_UI_FLAG_FULLSCREEN |
-//                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
-//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-//                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//        );
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                View.SYSTEM_UI_FLAG_FULLSCREEN |
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        );
     }
 
     private void setZenbo() {
