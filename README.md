@@ -13,18 +13,18 @@ Team 24 -- RoDoRoRaDa
 ### Library:
     CMU PocketSphinx
 
-## Demo video link
+## Demo video link 
 
 Connect 4 demo
 <https://drive.google.com/open?id=1_SvhNmw4oKQLURamlVYJq2q4Dou7IDbk>
 
 ## Team member and contribution
 
-#### P76074088
+#### P76074088 
 - 語音及遊戲功能整合
 
-#### P78084047
+#### P78084047 
 - 語音模型訓練、建立及實測調整
 
-#### P76074711
+#### P76074711 
 - Connect4功能實作
