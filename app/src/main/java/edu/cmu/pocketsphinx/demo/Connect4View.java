@@ -127,11 +127,6 @@ public class Connect4View extends View {
                 (int) mCenterPos + PLAY_AGAIN_BUTTON_WIDTH/2,
                 (int)( mBoardRect.bottom - mGridHeight *(Connect4Model.BOARD_HEIGHT+1)) - TEXT_PADDING);
 
-        mUndoRect = new Rect( (int) mCenterPos + PLAY_AGAIN_BUTTON_WIDTH/2,
-                (int)( mBoardRect.bottom - mGridHeight *(Connect4Model.BOARD_HEIGHT+1) - PLAY_AGAIN_BUTTON_HEIGHT - TEXT_PADDING ),
-                (int) mCenterPos + PLAY_AGAIN_BUTTON_WIDTH,
-                (int)( mBoardRect.bottom - mGridHeight *(Connect4Model.BOARD_HEIGHT+1)) - TEXT_PADDING);
-
         mUndoRect = new Rect( (int) w - PLAY_AGAIN_BUTTON_WIDTH *5 / 4,
                 (int)( mBoardRect.bottom - mGridHeight *(Connect4Model.BOARD_HEIGHT+1) - PLAY_AGAIN_BUTTON_HEIGHT - TEXT_PADDING ),
                 (int) w- PLAY_AGAIN_BUTTON_WIDTH *1 / 4,
@@ -192,7 +187,6 @@ public class Connect4View extends View {
                 }
             }
         }
-
     }
 
     /**
@@ -335,32 +329,31 @@ public class Connect4View extends View {
             //Checks if any of the presses were on the board or button
 
             //click board
-            if (mBoardRect.contains((int)x, (int)y)) {
+            if ( mModel.getButtonEnable() && mBoardRect.contains((int)x, (int)y)) {
+                mController.disableButton();
 
                 int column = (int) (x / mGridWidth);
                 if (column == Connect4Model.BOARD_WIDTH) {
                     column--;
                 }
+
+                /**
+                            * The place to place ball
+                            * */
                 //Notifies the controller of a click
                 mController.userTouchedScreen(column);
             }
 
             //click undo button
-            else if (mUndoRect.contains((int)x, (int)y)) {
+            else if ( mModel.getButtonEnable() && mUndoRect.contains((int)x, (int)y)) {
+                mController.disableButton();
 
-                if(mModel.mFirstBall)
-                {
-                    Log.d("Damn","First");
-                }
-                else
-                {
-                    Log.d("Damn","NonFirst");
-                }
-
-                Log.d("Damn", "turn : "+mModel.turn);
-                for(int i=0 ;i<mModel.turn ;i++)
-                {
-                    Log.d("Damn", mModel.ballRecord[i]+"");
+                /**
+                             * The place to undo
+                             * */
+                //NO CHEATING
+                if(!mModel.hasWinner()) {
+                    mController.userClickedUndo();
                 }
             }
 
@@ -370,7 +363,7 @@ public class Connect4View extends View {
                 mController.userClickedPlayAgain();
             }
 
-            // redo : onDraw
+            //redo onDraw
             invalidate();
         }
         else {
@@ -387,7 +380,13 @@ public class Connect4View extends View {
      */
     public void onVoiceEvent(int column)
     {
-        mController.userTouchedScreen(column);
+        if(mModel.getButtonEnable()) {
+            mController.disableButton();
+            /**
+                     * The place to place ball
+                     * */
+            mController.userTouchedScreen(column);
+        }
     }
 
 }

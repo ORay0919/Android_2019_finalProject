@@ -39,11 +39,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.TextView;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -73,7 +72,7 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
     private static final String KWS_SEARCH = "wakeup";
 
     /* Keyword we are looking for to activate menu */
-    private static final String KEYPHRASE = "hello mighty computer"; //hello mighty computer
+    private static final String KEYPHRASE = "eight"; //hello mighty computer
     private static final String KEYPHRASE2 = "阿飽 阿飽";
 //    zero/1e-5/
 //    one/1.0/
@@ -143,7 +142,6 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
         super.onCreate(savedInstanceState);
         // Prepare the data for UI
         setContentView(R.layout.main);
-//        ((TextView) findViewById(R.id.caption_text)).setText("Preparing the recognizer");
 
         // ASUSr Zenbo Setting
         setZenbo();
@@ -163,7 +161,8 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
 
         // Recognizer initialization is a time-consuming and it involves IO,
         // so we execute it in async task
-        new SetupTask(this).execute();
+//        new SetupTask(this).execute();
+        new SetupTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     // 異步執行
@@ -242,6 +241,8 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
                 //
                 //            switchSearch(MENU_SEARCH); //ori
 
+                recognizer.stop();
+
                 Random ran = new Random();
                 int fxck = ran.nextInt(6+1);
                 Log.d("Spoken", "text.equals(KEYPHRASE)"+ Integer.toString(fxck));
@@ -255,7 +256,13 @@ public class PocketSphinxActivity extends Activity implements RecognitionListene
                     Log.d("Spoken", "App not found");
                 }
 
-                recognizer.stop();
+            // 語音輸入衝突點
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 recognizer.startListening(KWS_SEARCH);
             }
 //            else {

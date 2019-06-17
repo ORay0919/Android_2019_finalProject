@@ -1,5 +1,7 @@
 package edu.cmu.pocketsphinx.demo;
 
+import android.util.Log;
+
 /**
  * This is the model of the game, containing all the information necessary for the view and the controller.
  */
@@ -26,13 +28,13 @@ public class Connect4Model {
     private String mPlayer1Name;
     private String mPlayer2Name;
 
-    public int[] ballRecord = new int[BOARD_WIDTH*BOARD_HEIGHT+10];
-    public int turn;
+    private int[] ballRecord = new int[BOARD_WIDTH*BOARD_HEIGHT+10];
+    private int ballNumber;
 
     private Point mLastPlacedBall = null;
 
     private boolean mPlayerTurn;
-    public boolean mFirstBall;
+    private boolean mButtonEnable;
 
     /**
      * Simple Point class for convenience
@@ -73,11 +75,11 @@ public class Connect4Model {
         }
 
         mPlayerTurn = PLAYER_1;
-        mFirstBall = true;
         mPlayer1Name = DEFAULT_PLAYER_1_NAME;
         mPlayer2Name = DEFAULT_PLAYER_2_NAME;
+        ballNumber = 0;
 
-        turn = 0;
+        enableButton();
     }
 
     public Point getLastPlacedBall() {
@@ -86,6 +88,10 @@ public class Connect4Model {
 
     public boolean getPlayerTurn() {
         return mPlayerTurn;
+    }
+
+    public boolean getButtonEnable() {
+        return mButtonEnable;
     }
 
     public void nextPlayerTurn() {
@@ -128,6 +134,10 @@ public class Connect4Model {
         this.mPlayer2Name = player2Name;
     }
 
+    public void disableButton() { mButtonEnable = false;}
+
+    public void enableButton() { mButtonEnable = true;}
+
     /**
      * Adds the ball to next available space in the column
      * @param col column numb r, goes from 0 - BOARD_WIDTH-1
@@ -148,12 +158,64 @@ public class Connect4Model {
     }
 
     /**
-     * Removes the ball in the top of the column
-     * @param col column numb r, goes from 0 - BOARD_WIDTH-1
+     * Removes the last ball record
+     * There must be ZERO ball  or  MORE THAN TWO balls  (user plays then bot plays)
      */
-    public void removeBall(int col)//first column is 0
-    {
+    public void removerLastMove(){//Array starts at 0 ,so ballNumber-1
 
+        if(ballNumber > 1) {
+
+            //remove BOT
+            removeTopBall(ballRecord[ballNumber-1]);
+            //remove User
+            removeTopBall(ballRecord[ballNumber-2]);
+            ballNumber -= 2;
+
+            if(ballNumber > 0) {
+                //Reload the new last placed ball
+                mLastPlacedBall = new Point();
+                mLastPlacedBall.set(ballRecord[ballNumber - 1], topBall(ballRecord[ballNumber - 1]));
+            }
+            else
+            {
+                //No last placed ball
+                mLastPlacedBall = null;
+            }
+        }
+    }
+
+    /**
+     * Removes the top ball in the column
+      *@param col the column to remove the top ball
+     */
+    public void removeTopBall(int col){
+
+        mBoard[col][ topBall(col)] = Color.EMPTY;
+    }
+
+    /**
+     * Find the toppest ball's height in the column
+     *@param col the column to find the top ball height
+     * @return the height of the top ball
+     */
+    public int topBall(int col){
+
+        for (int i = BOARD_HEIGHT-1; i >=0 ; i--) {
+            if (mBoard[col][i] != Color.EMPTY) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Record the order of ball placed column
+      * @param col
+     */
+    public void recordBall(int col)
+    {
+        ballRecord[ballNumber] = col;
+        ballNumber += 1;
     }
 
     /**
@@ -359,16 +421,15 @@ public class Connect4Model {
         //Swaps player turns every time it is reset
         if ((mPlayer1Score + mPlayer2Score) % 2 == 0) {
             mPlayerTurn = PLAYER_1;
+            enableButton();
         }
         else {
             mPlayerTurn = PLAYER_2;
+            disableButton();
         }
 
-        mFirstBall = true;
-        turn = 0;
-
         mLastPlacedBall = null;
-
+        ballNumber = 0;
     }
 
 }
