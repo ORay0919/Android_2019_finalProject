@@ -21,7 +21,7 @@ Connect 4 demo
 ## Presentation 
 
 PTT
-<https://drive.google.com/open?id=1kdDIZr69Z8z-gpbIkovpWCHhf2lGJhFI>
+<https://drive.google.com/open?id=12CjwsHhYs5QLVXm4DUVOGdFQm1D5X9um>
 
 ## Team member and contribution
 
