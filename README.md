@@ -18,6 +18,11 @@ Team 24 -- RoDoRoRaDa
 Connect 4 demo
 <https://drive.google.com/open?id=1_SvhNmw4oKQLURamlVYJq2q4Dou7IDbk>
 
+## Presentation 
+
+PTT
+<https://drive.google.com/open?id=1kdDIZr69Z8z-gpbIkovpWCHhf2lGJhFI>
+
 ## Team member and contribution
 
 #### P76074088 
